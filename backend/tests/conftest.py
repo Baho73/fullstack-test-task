@@ -54,12 +54,15 @@ async def test_engine():
 # START_BLOCK_SESSION_FIXTURE
 @pytest.fixture
 async def session(test_engine) -> AsyncSession:
-    """Provide a transactional async session that rolls back after each test."""
+    """Provide an async session. Cleans all tables after each test."""
     session_maker = async_sessionmaker(test_engine, expire_on_commit=False)
     async with session_maker() as session:
-        async with session.begin():
-            yield session
-            await session.rollback()
+        yield session
+
+    # Clean up all tables after each test for isolation
+    async with test_engine.begin() as conn:
+        for table in reversed(Base.metadata.sorted_tables):
+            await conn.execute(table.delete())
 # END_BLOCK_SESSION_FIXTURE
 
 
