@@ -1,12 +1,3 @@
-# FILE: backend/tests/integration/test_api.py
-# VERSION: 1.0.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Integration tests for FastAPI endpoints via httpx.AsyncClient.
-#   SCOPE: Full request/response cycle: routes -> services -> repos -> DB.
-#   DEPENDS: M-APP, M-SERVICE-FILES, M-SERVICE-ALERTS, M-DB
-#   LINKS: V-M-APP, VF-002, VF-003
-# END_MODULE_CONTRACT
-
 import pytest
 from httpx import ASGITransport, AsyncClient
 
@@ -16,7 +7,6 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from src.models import Base
 
 
-# START_BLOCK_TEST_APP_SETUP
 @pytest.fixture(scope="module")
 async def test_db_engine():
     """Integration test engine with real schema."""
@@ -53,10 +43,8 @@ async def client(test_db_engine, monkeypatch):
         yield ac
 
     app.dependency_overrides.clear()
-# END_BLOCK_TEST_APP_SETUP
 
 
-# START_BLOCK_FILES_ENDPOINT_TESTS
 class TestFilesEndpoints:
     """V-M-APP / scenario-1,3,5: File CRUD via HTTP."""
 
@@ -119,10 +107,8 @@ class TestFilesEndpoints:
         # Verify gone
         resp = await client.get(f"/files/{file_id}")
         assert resp.status_code == 404
-# END_BLOCK_FILES_ENDPOINT_TESTS
 
 
-# START_BLOCK_ALERTS_ENDPOINT_TESTS
 class TestAlertsEndpoints:
     """V-M-APP / scenario-2: Alert listing via HTTP."""
 
@@ -134,4 +120,3 @@ class TestAlertsEndpoints:
         assert "items" in data
         assert "total" in data
         assert data["items"] == []
-# END_BLOCK_ALERTS_ENDPOINT_TESTS

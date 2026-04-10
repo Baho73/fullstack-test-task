@@ -1,12 +1,3 @@
-// FILE: frontend/src/components/FilesTable.tsx
-// VERSION: 1.0.0
-// START_MODULE_CONTRACT
-//   PURPOSE: Files table component with pagination.
-//   SCOPE: FilesTable component
-//   DEPENDS: M-FE-TYPES, M-FE-PAGINATION
-//   LINKS: M-FE-FILES-TABLE, V-M-FE-FILES-TABLE
-// END_MODULE_CONTRACT
-
 "use client";
 
 import { Badge, Button, Spinner, Table } from "react-bootstrap";
@@ -41,7 +32,6 @@ type Props = {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-// START_BLOCK_FILES_TABLE
 export function FilesTable({ data, isLoading, onPageChange }: Props) {
   if (isLoading) {
     return (
@@ -129,4 +119,3 @@ export function FilesTable({ data, isLoading, onPageChange }: Props) {
     </>
   );
 }
-// END_BLOCK_FILES_TABLE

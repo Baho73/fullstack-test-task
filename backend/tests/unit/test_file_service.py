@@ -1,12 +1,3 @@
-# FILE: backend/tests/unit/test_file_service.py
-# VERSION: 1.0.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Verify FileService business logic: upload, delete cascade, get 404, pagination.
-#   SCOPE: Unit tests — service layer with real DB session, temp storage.
-#   DEPENDS: M-SERVICE-FILES, M-REPO-FILES, M-REPO-ALERTS, M-STORAGE
-#   LINKS: V-M-SERVICE-FILES, VF-001, VF-003
-# END_MODULE_CONTRACT
-
 import io
 
 import pytest
@@ -22,7 +13,6 @@ from src.services.file_service import (
 )
 
 
-# START_BLOCK_CREATE_FILE_TESTS
 class TestCreateFile:
     """V-M-SERVICE-FILES / scenario-1: create_file saves to storage and DB."""
 
@@ -51,10 +41,8 @@ class TestCreateFile:
         with pytest.raises(HTTPException) as exc_info:
             await create_file(session, title="Empty", upload_file=upload)
         assert exc_info.value.status_code == 400
-# END_BLOCK_CREATE_FILE_TESTS
 
 
-# START_BLOCK_GET_FILE_TESTS
 class TestGetFile:
     """V-M-SERVICE-FILES / scenario-4: get_file raises 404 for unknown ID."""
 
@@ -62,10 +50,8 @@ class TestGetFile:
         with pytest.raises(HTTPException) as exc_info:
             await get_file(session, "nonexistent-id")
         assert exc_info.value.status_code == 404
-# END_BLOCK_GET_FILE_TESTS
 
 
-# START_BLOCK_LIST_FILES_TESTS
 class TestListFiles:
     """V-M-SERVICE-FILES: list_files returns PaginatedResponse."""
 
@@ -76,10 +62,8 @@ class TestListFiles:
         assert hasattr(result, "limit")
         assert hasattr(result, "offset")
         assert len(result.items) <= result.limit
-# END_BLOCK_LIST_FILES_TESTS
 
 
-# START_BLOCK_DELETE_FILE_TESTS
 class TestDeleteFile:
     """V-M-SERVICE-FILES / scenario-2: delete_file cascades."""
 
@@ -114,10 +98,8 @@ class TestDeleteFile:
         with pytest.raises(HTTPException) as exc_info:
             await delete_file(session, "no-such-id")
         assert exc_info.value.status_code == 404
-# END_BLOCK_DELETE_FILE_TESTS
 
 
-# START_BLOCK_UPDATE_FILE_TESTS
 class TestUpdateFile:
     """V-M-SERVICE-FILES: update_file changes title."""
 
@@ -128,4 +110,3 @@ class TestUpdateFile:
 
         result = await update_file(session, "upd-svc-1", title="New Title")
         assert result.title == "New Title"
-# END_BLOCK_UPDATE_FILE_TESTS

@@ -1,12 +1,3 @@
-# FILE: backend/tests/unit/test_alert_repository.py
-# VERSION: 1.0.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Verify AlertRepository: paginated listing, create, delete by file_id.
-#   SCOPE: Unit tests with in-memory DB session from conftest.
-#   DEPENDS: M-REPO-ALERTS, M-MODELS
-#   LINKS: V-M-REPO-ALERTS
-# END_MODULE_CONTRACT
-
 import pytest
 
 from src.repositories.alert_repository import (
@@ -17,7 +8,6 @@ from src.repositories.alert_repository import (
 from src.models import Alert
 
 
-# START_BLOCK_LIST_ALERTS_TESTS
 class TestListAlerts:
     """V-M-REPO-ALERTS / scenario-1: list_alerts returns correct page with total count."""
 
@@ -38,10 +28,8 @@ class TestListAlerts:
         alerts, total = await list_alerts(session, limit=2, offset=0)
         assert len(alerts) == 2
         assert total == 5
-# END_BLOCK_LIST_ALERTS_TESTS
 
 
-# START_BLOCK_CREATE_ALERT_TESTS
 class TestCreateAlert:
     """V-M-REPO-ALERTS: create_alert inserts and returns."""
 
@@ -59,10 +47,8 @@ class TestCreateAlert:
         assert alert.id is not None
         assert alert.level == "warning"
         assert alert.file_id == "alert-create-file"
-# END_BLOCK_CREATE_ALERT_TESTS
 
 
-# START_BLOCK_DELETE_ALERTS_TESTS
 class TestDeleteAlertsByFile:
     """V-M-REPO-ALERTS / scenario-2: delete_alerts_by_file removes all alerts for given file_id."""
 
@@ -85,4 +71,3 @@ class TestDeleteAlertsByFile:
     async def test_delete_alerts_for_nonexistent_file(self, session):
         deleted_count = await delete_alerts_by_file(session, "no-such-file")
         assert deleted_count == 0
-# END_BLOCK_DELETE_ALERTS_TESTS

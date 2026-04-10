@@ -1,19 +1,9 @@
-# FILE: backend/tests/unit/test_tasks.py
-# VERSION: 1.0.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Verify Celery task logic: scan, metadata extraction, alert generation.
-#   SCOPE: Unit tests — calls async inner functions directly, bypassing Celery transport.
-#   DEPENDS: M-TASKS, M-MODELS, M-STORAGE
-#   LINKS: V-M-TASKS, VF-001
-# END_MODULE_CONTRACT
-
 import pytest
 
 from src.models import Alert, StoredFile
 from src.tasks import _extract_file_metadata, _scan_file_for_threats, _send_file_alert
 
 
-# START_BLOCK_SCAN_TESTS
 class TestScanFileForThreats:
     """V-M-TASKS / scenario-1,2: scan detects suspicious extensions and marks clean files."""
 
@@ -86,10 +76,8 @@ class TestScanFileForThreats:
         """V-M-TASKS / scenario-5: Tasks skip gracefully if file_id not found."""
         await _scan_file_for_threats(session, "nonexistent-id")
         # No exception raised
-# END_BLOCK_SCAN_TESTS
 
 
-# START_BLOCK_METADATA_TESTS
 class TestExtractFileMetadata:
     """V-M-TASKS / scenario-3: extract_file_metadata populates metadata for text files."""
 
@@ -130,10 +118,8 @@ class TestExtractFileMetadata:
         await session.refresh(file)
 
         assert file.processing_status == "failed"
-# END_BLOCK_METADATA_TESTS
 
 
-# START_BLOCK_ALERT_GENERATION_TESTS
 class TestSendFileAlert:
     """V-M-TASKS / scenario-4: send_file_alert creates appropriate alerts."""
 
@@ -193,4 +179,3 @@ class TestSendFileAlert:
         )
         alert = result.scalar_one()
         assert alert.level == "critical"
-# END_BLOCK_ALERT_GENERATION_TESTS

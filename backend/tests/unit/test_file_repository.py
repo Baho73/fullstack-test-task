@@ -1,12 +1,3 @@
-# FILE: backend/tests/unit/test_file_repository.py
-# VERSION: 1.0.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Verify FileRepository: paginated listing, CRUD, edge cases.
-#   SCOPE: Unit tests with in-memory DB session from conftest.
-#   DEPENDS: M-REPO-FILES, M-MODELS
-#   LINKS: V-M-REPO-FILES
-# END_MODULE_CONTRACT
-
 import pytest
 
 from src.repositories.file_repository import (
@@ -18,7 +9,6 @@ from src.repositories.file_repository import (
 )
 
 
-# START_BLOCK_LIST_FILES_TESTS
 class TestListFiles:
     """V-M-REPO-FILES / scenario-1: list_files returns correct page with total count."""
 
@@ -52,10 +42,8 @@ class TestListFiles:
         files, total = await list_files(session, limit=10, offset=100)
         assert files == []
         assert total == 1
-# END_BLOCK_LIST_FILES_TESTS
 
 
-# START_BLOCK_GET_FILE_TESTS
 class TestGetFile:
     """V-M-REPO-FILES / scenario-3: get_file returns None for unknown ID."""
 
@@ -71,10 +59,8 @@ class TestGetFile:
     async def test_get_nonexistent_file_returns_none(self, session):
         result = await get_file(session, "nonexistent-id")
         assert result is None
-# END_BLOCK_GET_FILE_TESTS
 
 
-# START_BLOCK_CREATE_FILE_TESTS
 class TestCreateFile:
     """V-M-REPO-FILES / scenario-2: create_file inserts and returns refreshed record."""
 
@@ -84,10 +70,8 @@ class TestCreateFile:
 
         assert result.id == "create-test-1"
         assert result.title == "Created File"
-# END_BLOCK_CREATE_FILE_TESTS
 
 
-# START_BLOCK_UPDATE_FILE_TESTS
 class TestUpdateFile:
     """V-M-REPO-FILES: update_file changes title."""
 
@@ -103,10 +87,8 @@ class TestUpdateFile:
     async def test_update_nonexistent_returns_none(self, session):
         result = await update_file(session, "no-such-id", title="Title")
         assert result is None
-# END_BLOCK_UPDATE_FILE_TESTS
 
 
-# START_BLOCK_DELETE_FILE_TESTS
 class TestDeleteFile:
     """V-M-REPO-FILES: delete_file removes record."""
 
@@ -124,4 +106,3 @@ class TestDeleteFile:
     async def test_delete_nonexistent_returns_false(self, session):
         result = await delete_file(session, "no-such-id")
         assert result is False
-# END_BLOCK_DELETE_FILE_TESTS

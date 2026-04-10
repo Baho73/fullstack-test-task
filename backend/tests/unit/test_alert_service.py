@@ -1,16 +1,6 @@
-# FILE: backend/tests/unit/test_alert_service.py
-# VERSION: 1.0.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Verify AlertService: paginated listing, alert creation.
-#   SCOPE: Unit tests with in-memory DB session.
-#   DEPENDS: M-SERVICE-ALERTS, M-REPO-ALERTS
-#   LINKS: V-M-SERVICE-ALERTS
-# END_MODULE_CONTRACT
-
 from src.services.alert_service import create_alert, list_alerts
 
 
-# START_BLOCK_LIST_ALERTS_TESTS
 class TestListAlerts:
     """V-M-SERVICE-ALERTS / scenario-1: list_alerts returns paginated response."""
 
@@ -33,10 +23,8 @@ class TestListAlerts:
         result = await list_alerts(session, limit=2, offset=0)
         assert len(result.items) == 2
         assert result.total == 5
-# END_BLOCK_LIST_ALERTS_TESTS
 
 
-# START_BLOCK_CREATE_ALERT_TESTS
 class TestCreateAlert:
     """V-M-SERVICE-ALERTS / scenario-2: create_alert creates and returns alert."""
 
@@ -53,4 +41,3 @@ class TestCreateAlert:
         )
         assert result.level == "info"
         assert result.file_id == "svc-create-alert"
-# END_BLOCK_CREATE_ALERT_TESTS

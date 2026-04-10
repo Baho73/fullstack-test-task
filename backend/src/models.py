@@ -1,17 +1,4 @@
-# FILE: backend/src/models.py
-# VERSION: 1.1.0
-# START_MODULE_CONTRACT
-#   PURPOSE: SQLAlchemy ORM модели: StoredFile и Alert. Cascade delete алертов при удалении файла.
-#   SCOPE: ORM model definitions, table schema, relationships
-#   DEPENDS: M-DB (Base class)
-#   LINKS: M-MODELS, V-M-MODELS
-# END_MODULE_CONTRACT
 #
-# START_MODULE_MAP
-#   Base - DeclarativeBase for Alembic and all models
-#   StoredFile - File entity with scan/processing state and relationship to alerts
-#   Alert - Alert entity with FK to files, cascade deleted with parent file
-# END_MODULE_MAP
 
 from datetime import datetime
 
@@ -23,7 +10,6 @@ class Base(DeclarativeBase):
     pass
 
 
-# START_BLOCK_STORED_FILE_MODEL
 class StoredFile(Base):
     __tablename__ = "files"
 
@@ -56,10 +42,8 @@ class StoredFile(Base):
         cascade="all, delete-orphan",
         passive_deletes=True,
     )
-# END_BLOCK_STORED_FILE_MODEL
 
 
-# START_BLOCK_ALERT_MODEL
 class Alert(Base):
     __tablename__ = "alerts"
 
@@ -76,9 +60,3 @@ class Alert(Base):
     )
 
     file: Mapped["StoredFile"] = relationship("StoredFile", back_populates="alerts")
-# END_BLOCK_ALERT_MODEL
-
-# START_CHANGE_SUMMARY
-#   LAST_CHANGE: [v1.1.0 - Added cascade relationship: StoredFile.alerts with delete-orphan,
-#                  Alert.file back_populates, FK ondelete=CASCADE. Added GRACE markup.]
-# END_CHANGE_SUMMARY

@@ -1,12 +1,3 @@
-// FILE: frontend/src/components/AlertsTable.tsx
-// VERSION: 1.0.0
-// START_MODULE_CONTRACT
-//   PURPOSE: Alerts table component with pagination.
-//   SCOPE: AlertsTable component
-//   DEPENDS: M-FE-TYPES, M-FE-PAGINATION
-//   LINKS: M-FE-ALERTS-TABLE, V-M-FE-ALERTS-TABLE
-// END_MODULE_CONTRACT
-
 "use client";
 
 import { Badge, Spinner, Table } from "react-bootstrap";
@@ -32,7 +23,6 @@ type Props = {
   onPageChange: (newOffset: number) => void;
 };
 
-// START_BLOCK_ALERTS_TABLE
 export function AlertsTable({ data, isLoading, onPageChange }: Props) {
   if (isLoading) {
     return (
@@ -91,4 +81,3 @@ export function AlertsTable({ data, isLoading, onPageChange }: Props) {
     </>
   );
 }
-// END_BLOCK_ALERTS_TABLE

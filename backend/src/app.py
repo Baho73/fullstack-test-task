@@ -1,15 +1,4 @@
-# FILE: backend/src/app.py
-# VERSION: 1.1.0
-# START_MODULE_CONTRACT
-#   PURPOSE: FastAPI application: routes, middleware, DI sessions, pagination via query params.
-#   SCOPE: CRUD endpoints for files, alerts listing, file download
-#   DEPENDS: M-SERVICE-FILES, M-SERVICE-ALERTS, M-SCHEMAS, M-TASKS, M-DB
-#   LINKS: M-APP, V-M-APP
-# END_MODULE_CONTRACT
 #
-# START_MODULE_MAP
-#   app - FastAPI application instance
-# END_MODULE_MAP
 
 from fastapi import Depends, FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -37,7 +26,6 @@ app.add_middleware(
 )
 
 
-# START_BLOCK_FILE_ROUTES
 @app.get("/files", response_model=PaginatedResponse[FileItem])
 async def list_files_view(
     limit: int = Query(default=20, ge=1, le=100),
@@ -99,10 +87,8 @@ async def delete_file_view(
 ):
     await file_service.delete_file(session, file_id)
     await session.commit()
-# END_BLOCK_FILE_ROUTES
 
 
-# START_BLOCK_ALERT_ROUTES
 @app.get("/alerts", response_model=PaginatedResponse[AlertItem])
 async def list_alerts_view(
     limit: int = Query(default=20, ge=1, le=100),
@@ -110,10 +96,3 @@ async def list_alerts_view(
     session: AsyncSession = Depends(get_session),
 ):
     return await alert_service.list_alerts(session, limit=limit, offset=offset)
-# END_BLOCK_ALERT_ROUTES
-
-# START_CHANGE_SUMMARY
-#   LAST_CHANGE: [v1.1.0 - Refactored: DI sessions via Depends(get_session), pagination
-#                  query params on GET /files and /alerts, delegates to service layer,
-#                  removed direct service.py imports, added GRACE markup]
-# END_CHANGE_SUMMARY

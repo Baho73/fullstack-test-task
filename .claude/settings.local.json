@@ -1,0 +1,27 @@
+{
+  "env": {
+    "CLAUDE_QUIET": "true",
+    "BASH_MAX_OUTPUT_LENGTH": "100"
+  },
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "Task",
+      "TodoWrite",
+      "NotebookEdit",
+      "LSP",
+      "WebFetch(domain:*)",
+      "Bash(node --check:*)"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "outputStyle": "default",
+  "verbose": false,
+  "theme": "compact",
+  "preferredEditMode": "diff"
+}

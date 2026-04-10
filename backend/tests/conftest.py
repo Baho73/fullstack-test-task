@@ -1,12 +1,3 @@
-# FILE: backend/tests/conftest.py
-# VERSION: 1.0.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Shared test fixtures for async DB sessions, temp storage, and factory helpers.
-#   SCOPE: conftest for all backend tests (unit + integration)
-#   DEPENDS: M-DB, M-MODELS, M-STORAGE
-#   LINKS: V-M-DB, V-M-MODELS, V-M-STORAGE, V-M-APP
-# END_MODULE_CONTRACT
-
 import asyncio
 from pathlib import Path
 from uuid import uuid4
@@ -18,7 +9,6 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from src.models import Alert, Base, StoredFile
 
 
-# START_BLOCK_TEST_ENGINE
 @pytest.fixture(scope="session")
 def event_loop():
     """Create a single event loop for the entire test session."""
@@ -48,10 +38,8 @@ async def test_engine():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
     await engine.dispose()
-# END_BLOCK_TEST_ENGINE
 
 
-# START_BLOCK_SESSION_FIXTURE
 @pytest.fixture
 async def session(test_engine) -> AsyncSession:
     """Provide an async session. Cleans all tables after each test."""
@@ -63,20 +51,16 @@ async def session(test_engine) -> AsyncSession:
     async with test_engine.begin() as conn:
         for table in reversed(Base.metadata.sorted_tables):
             await conn.execute(table.delete())
-# END_BLOCK_SESSION_FIXTURE
 
 
-# START_BLOCK_STORAGE_FIXTURE
 @pytest.fixture
 def tmp_storage(tmp_path) -> Path:
     """Provide a temporary storage directory for file operations."""
     storage_dir = tmp_path / "storage" / "files"
     storage_dir.mkdir(parents=True, exist_ok=True)
     return storage_dir
-# END_BLOCK_STORAGE_FIXTURE
 
 
-# START_BLOCK_FACTORY_HELPERS
 @pytest.fixture
 def make_stored_file():
     """Factory fixture for creating StoredFile instances."""
@@ -130,4 +114,3 @@ def make_alert():
         )
 
     return _make
-# END_BLOCK_FACTORY_HELPERS

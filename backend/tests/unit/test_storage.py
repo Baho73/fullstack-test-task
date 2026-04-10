@@ -1,12 +1,3 @@
-# FILE: backend/tests/unit/test_storage.py
-# VERSION: 1.0.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Verify FileStorage: save, delete, path resolution.
-#   SCOPE: Unit tests with temp filesystem, no DB.
-#   DEPENDS: M-STORAGE
-#   LINKS: V-M-STORAGE
-# END_MODULE_CONTRACT
-
 import io
 
 import pytest
@@ -15,7 +6,6 @@ from fastapi import UploadFile
 from src.storage import delete_file, get_path, save_file
 
 
-# START_BLOCK_SAVE_FILE_TESTS
 class TestSaveFile:
     """V-M-STORAGE / scenario-1: save_file writes content and returns size."""
 
@@ -45,10 +35,8 @@ class TestSaveFile:
         stored_name, _ = await save_file(upload, "id-456")
         assert stored_name.startswith("id-456")
         assert stored_name.endswith(".pdf")
-# END_BLOCK_SAVE_FILE_TESTS
 
 
-# START_BLOCK_DELETE_FILE_TESTS
 class TestDeleteFile:
     """V-M-STORAGE / scenario-2: delete_file removes existing file."""
 
@@ -67,10 +55,8 @@ class TestDeleteFile:
         """Deleting a file that doesn't exist should not raise."""
         monkeypatch.setattr("src.storage.STORAGE_DIR", tmp_storage)
         delete_file("nonexistent.txt")
-# END_BLOCK_DELETE_FILE_TESTS
 
 
-# START_BLOCK_GET_PATH_TESTS
 class TestGetPath:
     """V-M-STORAGE / scenario-3: get_path raises for non-existent file."""
 
@@ -88,4 +74,3 @@ class TestGetPath:
 
         with pytest.raises(Exception):
             get_path("missing.txt")
-# END_BLOCK_GET_PATH_TESTS

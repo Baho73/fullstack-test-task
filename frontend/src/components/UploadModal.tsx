@@ -1,12 +1,3 @@
-// FILE: frontend/src/components/UploadModal.tsx
-// VERSION: 1.0.0
-// START_MODULE_CONTRACT
-//   PURPOSE: File upload modal dialog.
-//   SCOPE: UploadModal component
-//   DEPENDS: M-FE-API, M-FE-TYPES
-//   LINKS: M-FE-UPLOAD-MODAL, V-M-FE-UPLOAD-MODAL
-// END_MODULE_CONTRACT
-
 "use client";
 
 import { FormEvent, useState } from "react";
@@ -19,7 +10,6 @@ type Props = {
   onSuccess: () => void;
 };
 
-// START_BLOCK_UPLOAD_MODAL
 export function UploadModal({ show, onHide, onSuccess }: Props) {
   const [title, setTitle] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -88,4 +78,3 @@ export function UploadModal({ show, onHide, onSuccess }: Props) {
     </Modal>
   );
 }
-// END_BLOCK_UPLOAD_MODAL

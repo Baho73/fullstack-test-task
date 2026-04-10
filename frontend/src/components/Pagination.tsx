@@ -1,12 +1,3 @@
-// FILE: frontend/src/components/Pagination.tsx
-// VERSION: 1.0.0
-// START_MODULE_CONTRACT
-//   PURPOSE: Reusable pagination control component with page numbers.
-//   SCOPE: PaginationControl component
-//   DEPENDS: none
-//   LINKS: M-FE-PAGINATION, V-M-FE-PAGINATION
-// END_MODULE_CONTRACT
-
 "use client";
 
 import { Pagination } from "react-bootstrap";
@@ -18,7 +9,6 @@ type Props = {
   onPageChange: (newOffset: number) => void;
 };
 
-// START_BLOCK_PAGINATION_CONTROL
 export function PaginationControl({ total, limit, offset, onPageChange }: Props) {
   const totalPages = Math.ceil(total / limit);
   const currentPage = Math.floor(offset / limit) + 1;
@@ -70,4 +60,3 @@ export function PaginationControl({ total, limit, offset, onPageChange }: Props)
     </div>
   );
 }
-// END_BLOCK_PAGINATION_CONTROL

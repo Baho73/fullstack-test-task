@@ -1,12 +1,3 @@
-// FILE: frontend/src/app/page.tsx
-// VERSION: 1.1.0
-// START_MODULE_CONTRACT
-//   PURPOSE: Main page: orchestrates components, manages top-level state and data loading.
-//   SCOPE: Page component with files/alerts state, pagination, upload modal
-//   DEPENDS: M-FE-API, M-FE-FILES-TABLE, M-FE-ALERTS-TABLE, M-FE-UPLOAD-MODAL
-//   LINKS: M-FE-PAGE, V-M-FE-PAGE
-// END_MODULE_CONTRACT
-
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
@@ -19,7 +10,6 @@ import { UploadModal } from "@/components/UploadModal";
 
 const PAGE_SIZE = 20;
 
-// START_BLOCK_PAGE
 export default function Page() {
   const [filesData, setFilesData] = useState<PaginatedResponse<FileItem> | null>(null);
   const [alertsData, setAlertsData] = useState<PaginatedResponse<AlertItem> | null>(null);
@@ -132,9 +122,3 @@ export default function Page() {
     </Container>
   );
 }
-// END_BLOCK_PAGE
-
-// START_CHANGE_SUMMARY
-//   LAST_CHANGE: [v1.1.0 - Refactored: split monolith into types, API client, and 4 components.
-//                  Page is now a thin orchestrator. Added pagination state management.]
-// END_CHANGE_SUMMARY

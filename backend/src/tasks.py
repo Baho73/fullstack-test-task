@@ -1,21 +1,4 @@
-# FILE: backend/src/tasks.py
-# VERSION: 1.1.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Celery tasks: scan -> metadata -> alert pipeline. Uses shared DB module.
-#   SCOPE: scan_file_for_threats, extract_file_metadata, send_file_alert
-#   DEPENDS: M-DB, M-MODELS, M-STORAGE
-#   LINKS: M-TASKS, V-M-TASKS
-# END_MODULE_CONTRACT
 #
-# START_MODULE_MAP
-#   celery_app - Celery application instance
-#   scan_file_for_threats - Celery task: check extension, size, mime mismatch
-#   extract_file_metadata - Celery task: extract text/pdf metadata
-#   send_file_alert - Celery task: create alert based on results
-#   _scan_file_for_threats - async inner: scan logic (testable without Celery)
-#   _extract_file_metadata - async inner: metadata logic
-#   _send_file_alert - async inner: alert logic
-# END_MODULE_MAP
 
 import asyncio
 import logging
@@ -45,7 +28,6 @@ def _run_in_worker_loop(coroutine):
     return _worker_loop.run_until_complete(coroutine)
 
 
-# START_BLOCK_SCAN_FILE
 async def _scan_file_for_threats(session: AsyncSession, file_id: str) -> None:
     file_item = await session.get(StoredFile, file_id)
     if not file_item:
@@ -73,10 +55,8 @@ async def _scan_file_for_threats(session: AsyncSession, file_id: str) -> None:
         "[CeleryTasks][scan_file_for_threats][BLOCK_SCAN_FILE] scan complete",
         extra={"file_id": file_id, "scan_status": file_item.scan_status},
     )
-# END_BLOCK_SCAN_FILE
 
 
-# START_BLOCK_EXTRACT_METADATA
 async def _extract_file_metadata(session: AsyncSession, file_id: str) -> None:
     file_item = await session.get(StoredFile, file_id)
     if not file_item:
@@ -117,10 +97,8 @@ async def _extract_file_metadata(session: AsyncSession, file_id: str) -> None:
         "[CeleryTasks][extract_file_metadata][BLOCK_EXTRACT_METADATA] metadata extracted",
         extra={"file_id": file_id},
     )
-# END_BLOCK_EXTRACT_METADATA
 
 
-# START_BLOCK_SEND_ALERT
 async def _send_file_alert(session: AsyncSession, file_id: str) -> None:
     file_item = await session.get(StoredFile, file_id)
     if not file_item:
@@ -144,10 +122,8 @@ async def _send_file_alert(session: AsyncSession, file_id: str) -> None:
         "[CeleryTasks][send_file_alert][BLOCK_SEND_ALERT] alert created",
         extra={"file_id": file_id, "level": alert.level},
     )
-# END_BLOCK_SEND_ALERT
 
 
-# START_BLOCK_CELERY_TASKS
 @celery_app.task
 def scan_file_for_threats(file_id: str) -> None:
     async def _run():
@@ -176,10 +152,3 @@ def send_file_alert(file_id: str) -> None:
             await _send_file_alert(session, file_id)
 
     _run_in_worker_loop(_run())
-# END_BLOCK_CELERY_TASKS
-
-# START_CHANGE_SUMMARY
-#   LAST_CHANGE: [v1.1.0 - Refactored: removed duplicate engine/session_maker,
-#                  now uses shared database.async_session_maker. Inner async functions
-#                  accept session parameter for testability. Added GRACE markup and logging.]
-# END_CHANGE_SUMMARY

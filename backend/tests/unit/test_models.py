@@ -1,18 +1,8 @@
-# FILE: backend/tests/unit/test_models.py
-# VERSION: 1.0.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Verify ORM models: column types, relationships, cascade behavior.
-#   SCOPE: Unit tests with in-memory SQLite via conftest session.
-#   DEPENDS: M-MODELS
-#   LINKS: V-M-MODELS
-# END_MODULE_CONTRACT
-
 from sqlalchemy import inspect
 
 from src.models import Alert, Base, StoredFile
 
 
-# START_BLOCK_STORED_FILE_SCHEMA_TESTS
 class TestStoredFileSchema:
     """V-M-MODELS / scenario-1: StoredFile has all required columns."""
 
@@ -33,10 +23,8 @@ class TestStoredFileSchema:
         mapper = inspect(StoredFile)
         pk_cols = [c.name for c in mapper.mapper.primary_key]
         assert pk_cols == ["id"]
-# END_BLOCK_STORED_FILE_SCHEMA_TESTS
 
 
-# START_BLOCK_ALERT_SCHEMA_TESTS
 class TestAlertSchema:
     """V-M-MODELS / scenario-2: Alert FK references files.id."""
 
@@ -53,10 +41,8 @@ class TestAlertSchema:
         mapper = inspect(Alert)
         id_col = mapper.columns["id"]
         assert id_col.autoincrement is not False
-# END_BLOCK_ALERT_SCHEMA_TESTS
 
 
-# START_BLOCK_CASCADE_TESTS
 class TestCascadeDelete:
     """V-M-MODELS / scenario-3: Cascade delete on StoredFile removes related Alerts."""
 
@@ -79,4 +65,3 @@ class TestCascadeDelete:
         )
         remaining = result.scalars().all()
         assert len(remaining) == 0, "Cascade delete should remove all related alerts"
-# END_BLOCK_CASCADE_TESTS

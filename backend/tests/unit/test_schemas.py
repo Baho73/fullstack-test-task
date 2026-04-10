@@ -1,12 +1,3 @@
-# FILE: backend/tests/unit/test_schemas.py
-# VERSION: 1.0.0
-# START_MODULE_CONTRACT
-#   PURPOSE: Verify Pydantic schemas: FileItem, FileUpdate, AlertItem, PaginatedResponse.
-#   SCOPE: Unit tests — pure validation, no DB or I/O.
-#   DEPENDS: M-SCHEMAS
-#   LINKS: V-M-SCHEMAS
-# END_MODULE_CONTRACT
-
 from datetime import datetime, timezone
 
 import pytest
@@ -14,7 +5,6 @@ import pytest
 from src.schemas import AlertItem, FileItem, FileUpdate, PaginatedResponse
 
 
-# START_BLOCK_FILE_ITEM_TESTS
 class TestFileItem:
     """V-M-SCHEMAS / scenario-1: FileItem validates from ORM-like attributes."""
 
@@ -58,10 +48,8 @@ class TestFileItem:
         item = FileItem.model_validate(data)
         assert item.metadata_json["approx_page_count"] == 5
         assert item.scan_status == "clean"
-# END_BLOCK_FILE_ITEM_TESTS
 
 
-# START_BLOCK_FILE_UPDATE_TESTS
 class TestFileUpdate:
     """V-M-SCHEMAS / scenario-3: FileUpdate validation."""
 
@@ -73,10 +61,8 @@ class TestFileUpdate:
         """FileUpdate should reject whitespace-only titles."""
         with pytest.raises(Exception):
             FileUpdate(title="   ")
-# END_BLOCK_FILE_UPDATE_TESTS
 
 
-# START_BLOCK_ALERT_ITEM_TESTS
 class TestAlertItem:
     """V-M-SCHEMAS: AlertItem validates correctly."""
 
@@ -91,10 +77,8 @@ class TestAlertItem:
         item = AlertItem.model_validate(data)
         assert item.level == "warning"
         assert item.file_id == "abc-123"
-# END_BLOCK_ALERT_ITEM_TESTS
 
 
-# START_BLOCK_PAGINATED_RESPONSE_TESTS
 class TestPaginatedResponse:
     """V-M-SCHEMAS / scenario-2: PaginatedResponse wraps items with total/limit/offset."""
 
@@ -145,4 +129,3 @@ class TestPaginatedResponse:
             offset=0,
         )
         assert len(resp.items) <= resp.limit
-# END_BLOCK_PAGINATED_RESPONSE_TESTS
