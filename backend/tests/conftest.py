@@ -8,11 +8,11 @@
 # END_MODULE_CONTRACT
 
 import asyncio
-import tempfile
 from pathlib import Path
 from uuid import uuid4
 
 import pytest
+from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from src.models import Alert, Base, StoredFile
@@ -27,6 +27,13 @@ def event_loop():
     loop.close()
 
 
+def _enable_sqlite_fk(dbapi_conn, connection_record):
+    """Enable foreign key enforcement in SQLite (required for cascade deletes)."""
+    cursor = dbapi_conn.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
+
 @pytest.fixture(scope="session")
 async def test_engine():
     """Create an in-memory SQLite async engine for testing."""
@@ -34,6 +41,7 @@ async def test_engine():
         "sqlite+aiosqlite:///:memory:",
         echo=False,
     )
+    event.listen(engine.sync_engine, "connect", _enable_sqlite_fk)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield engine
