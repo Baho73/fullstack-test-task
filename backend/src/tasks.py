@@ -17,17 +17,6 @@ logger = logging.getLogger(__name__)
 REDIS_URL = os.environ.get("REDIS_URL", "redis://backend-redis:6379/0")
 celery_app = Celery("file_tasks", broker=REDIS_URL, backend=REDIS_URL)
 
-_worker_loop: asyncio.AbstractEventLoop | None = None
-
-
-def _run_in_worker_loop(coroutine):
-    global _worker_loop
-    if _worker_loop is None or _worker_loop.is_closed():
-        _worker_loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(_worker_loop)
-    return _worker_loop.run_until_complete(coroutine)
-
-
 async def _scan_file_for_threats(session: AsyncSession, file_id: str) -> None:
     file_item = await session.get(StoredFile, file_id)
     if not file_item:
@@ -132,7 +121,7 @@ def scan_file_for_threats(file_id: str) -> None:
         async with async_session_maker() as session:
             extract_file_metadata.delay(file_id)
 
-    _run_in_worker_loop(_run())
+    asyncio.run(_run())
 
 
 @celery_app.task
@@ -142,7 +131,7 @@ def extract_file_metadata(file_id: str) -> None:
             await _extract_file_metadata(session, file_id)
         send_file_alert.delay(file_id)
 
-    _run_in_worker_loop(_run())
+    asyncio.run(_run())
 
 
 @celery_app.task
@@ -151,4 +140,4 @@ def send_file_alert(file_id: str) -> None:
         async with async_session_maker() as session:
             await _send_file_alert(session, file_id)
 
-    _run_in_worker_loop(_run())
+    asyncio.run(_run())
